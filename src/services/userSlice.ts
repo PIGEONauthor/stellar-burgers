@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { registerUserApi, loginUserApi, TRegisterData, TLoginData } from '@api';
+import {
+  registerUserApi,
+  loginUserApi,
+  updateUserApi,
+  TRegisterData,
+  TLoginData
+} from '@api';
 import { TUser } from '@utils-types';
 
 export const registerUser = createAsyncThunk(
@@ -14,23 +20,26 @@ export const loginUser = createAsyncThunk(
   'user/login',
   async (data: TLoginData) => {
     const response = await loginUserApi(data);
-    console.log(response);
+    return response;
+  }
+);
+
+export const updateUser = createAsyncThunk(
+  'user/update',
+  async (data: TRegisterData) => {
+    const response = await updateUserApi(data);
     return response;
   }
 );
 
 type TUserState = {
   success: boolean;
-  refreshToken: string;
-  accessToken: string;
   user: TUser;
   error: string | null;
 };
 
 const initialState: TUserState = {
   success: false,
-  refreshToken: '',
-  accessToken: '',
   user: {
     email: '',
     name: ''
@@ -42,7 +51,9 @@ const initialState: TUserState = {
 const UserSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    logOut: (state) => (state = initialState)
+  },
   extraReducers: (builder) => {
     builder
       .addCase(registerUser.pending, (state) => {
@@ -54,8 +65,6 @@ const UserSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.success = true;
-        state.refreshToken = action.payload.refreshToken;
-        state.accessToken = action.payload.accessToken;
         state.user.email = action.payload.user.email;
         state.user.name = action.payload.user.name;
       });
@@ -69,8 +78,19 @@ const UserSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.success = action.payload.success;
-        state.refreshToken = action.payload.refreshToken;
-        state.accessToken = action.payload.accessToken;
+        state.user.email = action.payload.user.email;
+        state.user.name = action.payload.user.name;
+      });
+    builder
+      .addCase(updateUser.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(updateUser.rejected, (state, action) => {
+        state.success = false;
+        state.error = action.error.message!;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.success = action.payload.success;
         state.user.email = action.payload.user.email;
         state.user.name = action.payload.user.name;
       });
@@ -78,3 +98,4 @@ const UserSlice = createSlice({
 });
 
 export const userReducer = UserSlice.reducer;
+export const { logOut } = UserSlice.actions;

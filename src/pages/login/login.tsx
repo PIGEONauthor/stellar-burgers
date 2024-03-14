@@ -20,7 +20,6 @@ export const Login: FC = () => {
         password: password
       })
     );
-    navigate('/profile');
   };
 
   return (
