@@ -1,12 +1,17 @@
-import { ProfileUI } from '@ui-pages';
 import { FC, SyntheticEvent, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { ProfileUI } from '@ui-pages';
+import { useSelector } from '../../services/store';
 
 export const Profile: FC = () => {
   /** TODO: взять переменную из стора */
-  const user = {
-    name: '',
-    email: ''
-  };
+  // const user = {
+  //   name: '',
+  //   email: ''
+  // };
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.userData.user);
 
   const [formValue, setFormValue] = useState({
     name: user.name,
@@ -20,6 +25,7 @@ export const Profile: FC = () => {
       name: user?.name || '',
       email: user?.email || ''
     }));
+    console.log(user);
   }, [user]);
 
   const isFormChanged =
@@ -47,15 +53,19 @@ export const Profile: FC = () => {
     }));
   };
 
-  return (
-    <ProfileUI
-      formValue={formValue}
-      isFormChanged={isFormChanged}
-      handleCancel={handleCancel}
-      handleSubmit={handleSubmit}
-      handleInputChange={handleInputChange}
-    />
-  );
+  if (!user.name) {
+    navigate('/login');
+  } else {
+    return (
+      <ProfileUI
+        formValue={formValue}
+        isFormChanged={isFormChanged}
+        handleCancel={handleCancel}
+        handleSubmit={handleSubmit}
+        handleInputChange={handleInputChange}
+      />
+    );
+  }
 
   return null;
 };

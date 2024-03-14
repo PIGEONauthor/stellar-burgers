@@ -39,7 +39,7 @@ const App = () => {
           <Route
             path='/feed/:number'
             element={
-              <Modal title={''} onClose={() => console.log('close')}>
+              <Modal title={''} onClose={() => navigate(-1)}>
                 <OrderInfo />
               </Modal>
             }
@@ -55,7 +55,7 @@ const App = () => {
           <Route
             path='/profile/orders/:number'
             element={
-              <Modal title={''} onClose={() => console.log('close')}>
+              <Modal title={''} onClose={() => navigate(-1)}>
                 <OrderInfo />
               </Modal>
             }
