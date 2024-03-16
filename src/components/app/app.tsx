@@ -12,11 +12,13 @@ import {
   ConstructorPage,
   Register,
   ForgotPassword,
+  ResetPassword,
   Profile,
   ProfileOrders,
   NotFound404
 } from '@pages';
 import { getIngredients } from '../../services/slices/ingredientsSlice';
+import { getUser } from '../../services/slices/userSlice';
 import { getFeeds } from '../../services/slices/feedsSlice';
 
 const App = () => {
@@ -28,16 +30,17 @@ const App = () => {
   useEffect(() => {
     dispatch(getIngredients());
     dispatch(getFeeds());
+    dispatch(getUser());
   }, []);
 
   return (
     <div className={styles.app}>
       <AppHeader />
-      {/* <ConstructorPage /> */}
       <Routes location={backgroundLocation || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/ingredients/:id' element={<IngredientDetails />} />
         <Route path='/feed' element={<Feed />} />
+        <Route path='/feed/:number' element={<OrderInfo />} />
         <Route
           path='/login'
           element={
@@ -46,8 +49,30 @@ const App = () => {
             </ProtectedRoute>
           }
         />
-        <Route path='/register' element={<Register />} />
-        <Route path='/forgot-password' element={<ForgotPassword />} />
+        <Route
+          path='/register'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <Register />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/forgot-password'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <ForgotPassword />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/reset-password'
+          element={
+            <ProtectedRoute onlyUnAuth>
+              <ResetPassword />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path='/profile'
           element={

@@ -3,12 +3,14 @@ import {
   registerUserApi,
   loginUserApi,
   updateUserApi,
+  logoutApi,
+  getUserApi,
   TRegisterData,
   TLoginData
 } from '@api';
 import { TUser } from '@utils-types';
 
-export const registerUser = createAsyncThunk(
+export const register = createAsyncThunk(
   'user/register',
   async (data: TRegisterData) => {
     const response = await registerUserApi(data);
@@ -16,13 +18,18 @@ export const registerUser = createAsyncThunk(
   }
 );
 
-export const loginUser = createAsyncThunk(
+export const login = createAsyncThunk(
   'user/login',
   async (data: TLoginData) => {
     const response = await loginUserApi(data);
     return response;
   }
 );
+
+export const logout = createAsyncThunk('user/logout', async () => {
+  const response = await logoutApi();
+  return response;
+});
 
 export const updateUser = createAsyncThunk(
   'user/update',
@@ -31,6 +38,11 @@ export const updateUser = createAsyncThunk(
     return response;
   }
 );
+
+export const getUser = createAsyncThunk('user/request', async () => {
+  const response = await getUserApi();
+  return response;
+});
 
 type TUserState = {
   isAuthChecked: boolean;
@@ -43,7 +55,6 @@ const initialState: TUserState = {
   user: {
     email: '',
     name: ''
-    // pass: Funtic1991
   },
   error: ''
 };
@@ -51,51 +62,57 @@ const initialState: TUserState = {
 const UserSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {
-    logOut: (state) => (state = initialState)
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(registerUser.pending, (state) => {
-        state.error = null;
+      .addCase(register.pending, (state) => {
+        state.error = '';
       })
-      .addCase(registerUser.rejected, (state, action) => {
-        state.isAuthChecked = false;
+      .addCase(register.rejected, (state, action) => {
         state.error = action.error.message!;
       })
-      .addCase(registerUser.fulfilled, (state, action) => {
+      .addCase(register.fulfilled, (state, action) => {
         state.isAuthChecked = true;
-        state.user.email = action.payload.user.email;
-        state.user.name = action.payload.user.name;
+        state.error = '';
+        state.user = action.payload.user;
       });
     builder
-      .addCase(loginUser.pending, (state) => {
-        state.error = null;
+      .addCase(login.pending, (state) => {
+        state.isAuthChecked = false;
+        state.error = '';
       })
-      .addCase(loginUser.rejected, (state, action) => {
+      .addCase(login.rejected, (state, action) => {
         state.isAuthChecked = false;
         state.error = action.error.message!;
       })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.isAuthChecked = action.payload.success;
-        state.user.email = action.payload.user.email;
-        state.user.name = action.payload.user.name;
+      .addCase(login.fulfilled, (state, action) => {
+        state.isAuthChecked = true;
+        state.error = '';
+        state.user = action.payload.user;
+      });
+    builder.addCase(logout.fulfilled, (state) => (state = initialState));
+    builder
+      .addCase(getUser.rejected, (state, action) => {
+        state.isAuthChecked = false;
+        console.log(action.error.message);
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.isAuthChecked = true;
+        state.user = action.payload.user;
       });
     builder
       .addCase(updateUser.pending, (state) => {
-        state.error = null;
+        state.error = '';
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.isAuthChecked = false;
         state.error = action.error.message!;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        state.isAuthChecked = action.payload.success;
-        state.user.email = action.payload.user.email;
-        state.user.name = action.payload.user.name;
+        state.isAuthChecked = true;
+        state.user = action.payload.user;
       });
   }
 });
 
 export const userReducer = UserSlice.reducer;
-export const { logOut } = UserSlice.actions;

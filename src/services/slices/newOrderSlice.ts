@@ -11,23 +11,12 @@ export const newBurgerOrder = createAsyncThunk(
 );
 
 type TNewOrderState = {
-  success: boolean;
   order: TOrder | null;
   name: string;
   orderRequest: boolean;
 };
 
 const initialState: TNewOrderState = {
-  success: false,
-  // order: {
-  //   _id: '',
-  //   status: '',
-  //   name: '',
-  //   createdAt: '',
-  //   updatedAt: '',
-  //   number: 0,
-  //   ingredients: []
-  // },
   order: null,
   name: '',
   orderRequest: false
@@ -43,14 +32,11 @@ const newOrderSlice = createSlice({
     builder
       .addCase(newBurgerOrder.pending, (state) => {
         state.orderRequest = true;
-        // state.error = null;
       })
       .addCase(newBurgerOrder.rejected, (state, action) => {
         state.orderRequest = false;
-        // state.error = action.error.message!;
       })
       .addCase(newBurgerOrder.fulfilled, (state, action) => {
-        state.success = true;
         state.orderRequest = false;
         state.order = action.payload.order;
         state.name = action.payload.name;
