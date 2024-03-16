@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from '../../services/store';
 import {
   getIngredients,
   getIngredientsSelector
-} from '../../services/ingredientsSlice';
+} from '../../services/slices/ingredientsSlice';
 
 export const BurgerIngredients: FC = () => {
   /** TODO: взять переменные из стора */

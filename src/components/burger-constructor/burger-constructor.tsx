@@ -3,8 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useSelector, useDispatch } from '../../services/store';
-import { newBurgerOrder, clearOrder } from '../../services/newOrderSlice';
-import { clearConstructor } from '../../services/burgerConstructorSlice';
+import {
+  newBurgerOrder,
+  clearOrder
+} from '../../services/slices/newOrderSlice';
+import { clearConstructor } from '../../services/slices/burgerConstructorSlice';
 
 export const BurgerConstructor: FC = () => {
   /** TODO: взять переменные constructorItems, orderRequest и orderModalData из стора */

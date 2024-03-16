@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import '../../index.css';
 import styles from './app.module.css';
+import { useDispatch } from '../../services/store';
 
 import { AppHeader, Modal, IngredientDetails, OrderInfo } from '@components';
 import { ProtectedRoute } from '../ProtectedRoute/protectedRoute';
@@ -14,11 +16,19 @@ import {
   ProfileOrders,
   NotFound404
 } from '@pages';
+import { getIngredients } from '../../services/slices/ingredientsSlice';
+import { getFeeds } from '../../services/slices/feedsSlice';
 
 const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const backgroundLocation = location.state?.background;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getIngredients());
+    dispatch(getFeeds());
+  }, []);
 
   return (
     <div className={styles.app}>
@@ -78,7 +88,9 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <Modal title={''} onClose={() => navigate(-1)}>
-                <OrderInfo />
+                <ProtectedRoute>
+                  <OrderInfo />
+                </ProtectedRoute>
               </Modal>
             }
           />

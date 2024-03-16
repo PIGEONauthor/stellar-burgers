@@ -33,13 +33,13 @@ export const updateUser = createAsyncThunk(
 );
 
 type TUserState = {
-  success: boolean;
+  isAuthChecked: boolean;
   user: TUser;
   error: string | null;
 };
 
 const initialState: TUserState = {
-  success: false,
+  isAuthChecked: false,
   user: {
     email: '',
     name: ''
@@ -60,11 +60,11 @@ const UserSlice = createSlice({
         state.error = null;
       })
       .addCase(registerUser.rejected, (state, action) => {
-        state.success = false;
+        state.isAuthChecked = false;
         state.error = action.error.message!;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
-        state.success = true;
+        state.isAuthChecked = true;
         state.user.email = action.payload.user.email;
         state.user.name = action.payload.user.name;
       });
@@ -73,11 +73,11 @@ const UserSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        state.success = false;
+        state.isAuthChecked = false;
         state.error = action.error.message!;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.success = action.payload.success;
+        state.isAuthChecked = action.payload.success;
         state.user.email = action.payload.user.email;
         state.user.name = action.payload.user.name;
       });
@@ -86,11 +86,11 @@ const UserSlice = createSlice({
         state.error = null;
       })
       .addCase(updateUser.rejected, (state, action) => {
-        state.success = false;
+        state.isAuthChecked = false;
         state.error = action.error.message!;
       })
       .addCase(updateUser.fulfilled, (state, action) => {
-        state.success = action.payload.success;
+        state.isAuthChecked = action.payload.success;
         state.user.email = action.payload.user.email;
         state.user.name = action.payload.user.name;
       });

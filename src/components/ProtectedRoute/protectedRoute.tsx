@@ -13,14 +13,14 @@ export const ProtectedRoute = ({
   onlyUnAuth
 }: ProtectedRouteProps) => {
   const location = useLocation();
-  const isAuthChecked = useSelector((state) => state.userData.success);
-  const user = useSelector((state) => state.userData.user.name);
+  const isAuthChecked = useSelector((state) => state.userData.isAuthChecked);
+  const userIsAuth = !!useSelector((state) => state.userData.user.name);
 
-  if (!onlyUnAuth && !user) {
+  if (!onlyUnAuth && !userIsAuth) {
     return <Navigate replace to='/login' state={{ from: location }} />;
   }
 
-  if (onlyUnAuth && user) {
+  if (onlyUnAuth && userIsAuth) {
     const from = location.state?.from || { pathname: '/' };
     return <Navigate replace to={from} />;
   }

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { TConstructorIngredient } from '../utils/types';
+import { TConstructorIngredient } from '../../utils/types';
 import { act } from 'react-dom/test-utils';
 // import { TOrder } from '../utils/types';
 

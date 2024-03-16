@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ProfileUI } from '@ui-pages';
 import { useSelector, useDispatch } from '../../services/store';
-import { updateUser } from '../../services/userSlice';
+import { updateUser } from '../../services/slices/userSlice';
 
 export const Profile: FC = () => {
   /** TODO: взять переменную из стора */
@@ -12,7 +12,7 @@ export const Profile: FC = () => {
   //   email: ''
   // };
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.userData.user);
+  const user = useSelector((state) => state.userData.user!);
 
   const [formValue, setFormValue] = useState({
     name: user.name,
