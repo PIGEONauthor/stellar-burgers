@@ -4,45 +4,15 @@ import {
   loginUserApi,
   updateUserApi,
   logoutApi,
-  getUserApi,
-  TRegisterData,
-  TLoginData
+  getUserApi
 } from '@api';
 import { TUser } from '@utils-types';
 
-export const register = createAsyncThunk(
-  'user/register',
-  async (data: TRegisterData) => {
-    const response = await registerUserApi(data);
-    return response;
-  }
-);
-
-export const login = createAsyncThunk(
-  'user/login',
-  async (data: TLoginData) => {
-    const response = await loginUserApi(data);
-    return response;
-  }
-);
-
-export const logout = createAsyncThunk('user/logout', async () => {
-  const response = await logoutApi();
-  return response;
-});
-
-export const updateUser = createAsyncThunk(
-  'user/update',
-  async (data: TRegisterData) => {
-    const response = await updateUserApi(data);
-    return response;
-  }
-);
-
-export const getUser = createAsyncThunk('user/request', async () => {
-  const response = await getUserApi();
-  return response;
-});
+export const register = createAsyncThunk('user/register', registerUserApi);
+export const login = createAsyncThunk('user/login', loginUserApi);
+export const logout = createAsyncThunk('user/logout', logoutApi);
+export const updateUser = createAsyncThunk('user/update', updateUserApi);
+export const getUser = createAsyncThunk('user/request', getUserApi);
 
 type TUserState = {
   isAuthChecked: boolean;

@@ -19,7 +19,6 @@ import {
 } from '@pages';
 import { getIngredients } from '../../services/slices/ingredientsSlice';
 import { getUser } from '../../services/slices/userSlice';
-import { getFeeds } from '../../services/slices/feedsSlice';
 
 const App = () => {
   const navigate = useNavigate();
@@ -29,7 +28,6 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getIngredients());
-    dispatch(getFeeds());
     dispatch(getUser());
   }, []);
 

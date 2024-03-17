@@ -1,26 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
 import { TConstructorIngredient } from '../../utils/types';
-import { act } from 'react-dom/test-utils';
-// import { TOrder } from '../utils/types';
 
 type TConstructorState = {
   constructorItems: {
     bun: TConstructorIngredient | null;
     ingredients: TConstructorIngredient[];
   };
-  dataToOrder: string[];
-  // orderRequest: boolean;
-  // orderModalData: TOrder | null;
 };
 
 const initialState: TConstructorState = {
   constructorItems: {
     bun: null,
     ingredients: []
-  },
-  dataToOrder: []
-  // orderRequest: false,
-  // orderModalData: null
+  }
 };
 
 const burgerConstructorSlice = createSlice({
@@ -30,21 +23,20 @@ const burgerConstructorSlice = createSlice({
     addConstructorItem: (state, action) => {
       const type = action.payload.type;
 
-      state.dataToOrder.push(action.payload._id);
-
       if (type === 'bun') {
-        state.constructorItems.bun = action.payload;
+        state.constructorItems.bun = { ...action.payload, id: uuidv4() };
       } else if (type === 'main' || type === 'sauce') {
-        state.constructorItems.ingredients.push(action.payload);
+        state.constructorItems.ingredients.push({
+          ...action.payload,
+          id: uuidv4()
+        });
       }
     },
     removeConstructorItem: (state, action) => {
-      const id = action.payload;
-
-      state.dataToOrder.filter((el) => el !== id);
-
       state.constructorItems.ingredients =
-        state.constructorItems.ingredients.filter((el) => el._id !== id);
+        state.constructorItems.ingredients.filter(
+          (el) => el.id !== action.payload
+        );
     },
     clearConstructor: (state) => (state = initialState)
   },

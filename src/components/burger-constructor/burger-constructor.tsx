@@ -15,7 +15,7 @@ export const BurgerConstructor: FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const user = useSelector((state) => state.userData.user);
+  const userIsAuth = useSelector((state) => state.userData.isAuthChecked);
   const { constructorItems } = useSelector((state) => state.burgerConstructor);
   const { orderRequest, order } = useSelector((state) => state.newOrder);
 
@@ -25,7 +25,7 @@ export const BurgerConstructor: FC = () => {
     // if (!constructorItems.bun || orderRequest) {
     //   return;
     // } else
-    if (!user.name) {
+    if (!userIsAuth) {
       navigate('/login');
     } else if (constructorItems.bun && constructorItems.ingredients) {
       dispatch(newBurgerOrder(dataToOrder));
