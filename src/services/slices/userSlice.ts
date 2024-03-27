@@ -1,3 +1,4 @@
+import { getCookie } from '../../utils/cookie';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   registerUserApi,
@@ -13,6 +14,15 @@ export const login = createAsyncThunk('user/login', loginUserApi);
 export const logout = createAsyncThunk('user/logout', logoutApi);
 export const updateUser = createAsyncThunk('user/update', updateUserApi);
 export const getUser = createAsyncThunk('user/request', getUserApi);
+
+export const checkUserAuth = createAsyncThunk(
+  'user/checkAuth',
+  async (_, { dispatch }) => {
+    if (getCookie('accessToken')) {
+      dispatch(getUser());
+    }
+  }
+);
 
 type TUserState = {
   isAuthChecked: boolean;

@@ -8,7 +8,19 @@ describe('проверяем функциональность приложени
       fixture: 'ingredients.json'
     }).as(`${'getIngredients'}`);
 
+    cy.intercept('GET', 'api/auth/user', {
+      fixture: 'userResponse.json'
+    }).as(`${'getUser'}`);
+
+    cy.setCookie('accessToken', 'mockAccessToken');
+    window.localStorage.setItem('refreshToken', 'mockReshToken');
+
     cy.visit('http://localhost:4000');
+  });
+
+  afterEach(() => {
+    cy.setCookie('accessToken', '');
+    window.localStorage.setItem('refreshToken', '');
   });
 
   describe('проверка загрузки моковых данных', () => {
@@ -52,25 +64,65 @@ describe('проверяем функциональность приложени
 
   describe('добавление ингредиентов из списка в конструктор', () => {
     it('булка добавляется в конструктор', () => {
-      const bunssList = cy.get('h3').contains('Булки').next('ul');
-      const addButton = bunssList.contains('Добавить');
+      const bunsList = cy.get('h3').contains('Булки').next('ul');
+      const bunsAddButton = bunsList.contains('Добавить');
 
       cy.get('div').contains('Выберите булки').should('exist');
 
-      addButton.click();
+      bunsAddButton.click();
 
       cy.get('div').contains('Выберите булки').should('not.exist');
     });
 
     it('ингредиент добавляется в конструктор', () => {
       const mainsList = cy.get('h3').contains('Начинки').next('ul');
-      const addButton = mainsList.contains('Добавить');
+      const mainsAddButton = mainsList.contains('Добавить');
 
       cy.get('div').contains('Выберите начинку').should('exist');
 
-      addButton.click();
+      mainsAddButton.click();
 
       cy.get('div').contains('Выберите начинку').should('not.exist');
+    });
+  });
+
+  describe('оформление заказа', () => {
+    it('проверка пользователя с моковыми данными', () => {
+      // cy.contains('John Smith').should('not.exist');
+
+      // cy.intercept('GET', 'api/auth/user', {
+      //   fixture: 'userResponse.json'
+      // }).as(`${'getUser'}`);
+
+      // cy.wait(['@getUser']);
+
+      cy.contains('John Smith').should('exist');
+    });
+
+    it('клик по кнопке «Оформить заказ»', () => {
+      cy.intercept('POST', 'api/orders', {
+        fixture: 'orderResponse.json'
+      }).as(`${'orderRequest'}`);
+
+      const bunsList = cy.get('h3').contains('Булки').next('ul');
+      const bunsAddButton = bunsList.contains('Добавить');
+      bunsAddButton.click();
+
+      const mainsList = cy.get('h3').contains('Начинки').next('ul');
+      const mainsAddButton = mainsList.contains('Добавить');
+      mainsAddButton.click();
+
+      const orderRequestButton = cy.contains('Оформить заказ');
+      orderRequestButton.click();
+
+      cy.contains('36112');
+
+      cy.get('body').type('{esc}');
+
+      cy.contains('36112').should('not.exist');
+      cy.contains('Выберите булки').should('exist');
+      cy.contains('Выберите начинку').should('exist');
+
     });
   });
 });

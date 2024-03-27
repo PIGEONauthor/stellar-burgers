@@ -18,7 +18,7 @@ import {
   NotFound404
 } from '@pages';
 import { getIngredients } from '../../services/slices/ingredientsSlice';
-import { getUser } from '../../services/slices/userSlice';
+import { checkUserAuth } from '../../services/slices/userSlice';
 
 const App = () => {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(getIngredients());
-    dispatch(getUser());
+    dispatch(checkUserAuth());
   }, []);
 
   return (
